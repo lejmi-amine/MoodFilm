@@ -356,6 +356,7 @@
         transition: all 0.4s ease;
         position: relative;
         border: 1px solid rgba(255, 215, 0, 0.1);
+        cursor: pointer;
       }
 
       .film-card::before {
@@ -495,6 +496,196 @@
         font-size: 0.9rem;
       }
 
+      /* Modal für Film-Details */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 2000;
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      .modal-content {
+        background: linear-gradient(
+          145deg,
+          var(--secondary) 0%,
+          var(--primary) 100%
+        );
+        max-width: 1200px;
+        margin: 40px auto;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+        position: relative;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+      }
+
+      .close-modal:hover {
+        background: var(--accent);
+        transform: scale(1.1);
+      }
+
+      .modal-header {
+        position: relative;
+        height: 500px;
+        overflow: hidden;
+      }
+
+      .modal-backdrop {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.6);
+      }
+
+      .modal-header-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 40px;
+        background: linear-gradient(transparent, rgba(15, 15, 26, 0.9));
+      }
+
+      .modal-title {
+        font-family: "Playfair Display", serif;
+        font-size: 3rem;
+        margin-bottom: 10px;
+        color: var(--gold);
+      }
+
+      .modal-subtitle {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+        color: var(--text-secondary);
+      }
+
+      .modal-rating {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--gold);
+        font-weight: 600;
+      }
+
+      .modal-body {
+        padding: 40px;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 40px;
+      }
+
+      .modal-poster {
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-details h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: var(--gold);
+        border-bottom: 2px solid var(--accent);
+        padding-bottom: 5px;
+      }
+
+      .modal-overview {
+        margin-bottom: 25px;
+        line-height: 1.7;
+      }
+
+      .modal-genres {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 25px;
+      }
+
+      .modal-genre {
+        background: linear-gradient(45deg, var(--accent), #ff4d4d);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .modal-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+
+      .info-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .info-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: 5px;
+      }
+
+      .info-value {
+        font-weight: 600;
+      }
+
+      .trailer-section {
+        margin-top: 30px;
+      }
+
+      .trailer-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+        overflow: hidden;
+        border-radius: 10px;
+        margin-top: 15px;
+      }
+
+      .trailer-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      .no-trailer {
+        text-align: center;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        color: var(--text-secondary);
+      }
+
       /* Responsive Design */
       @media (max-width: 968px) {
         .films-grid {
@@ -506,6 +697,19 @@
         }
 
         .section-title {
+          font-size: 2.5rem;
+        }
+
+        .modal-body {
+          grid-template-columns: 1fr;
+        }
+
+        .modal-poster {
+          max-width: 300px;
+          margin: 0 auto;
+        }
+
+        .modal-title {
           font-size: 2.5rem;
         }
       }
@@ -533,6 +737,22 @@
         #search-btn {
           border-radius: 50px;
           padding: 15px;
+        }
+
+        .modal-header {
+          height: 400px;
+        }
+
+        .modal-title {
+          font-size: 2rem;
+        }
+
+        .modal-header-content {
+          padding: 20px;
+        }
+
+        .modal-body {
+          padding: 20px;
         }
       }
 
@@ -644,6 +864,70 @@
       </p>
     </footer>
 
+    <!-- Modal für Film-Details -->
+    <div class="modal" id="film-modal">
+      <div class="modal-content">
+        <button class="close-modal" id="close-modal">&times;</button>
+        <div class="modal-header">
+          <img id="modal-backdrop" class="modal-backdrop" src="" alt="" />
+          <div class="modal-header-content">
+            <h2 id="modal-title" class="modal-title"></h2>
+            <div class="modal-subtitle">
+              <span id="modal-year"></span>
+              <span id="modal-runtime"></span>
+              <div class="modal-rating">
+                <i class="fas fa-star"></i>
+                <span id="modal-rating"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div>
+            <img id="modal-poster" class="modal-poster" src="" alt="" />
+          </div>
+          <div class="modal-details">
+            <h3>Übersicht</h3>
+            <p id="modal-overview" class="modal-overview"></p>
+
+            <div class="modal-genres" id="modal-genres"></div>
+
+            <div class="modal-info-grid">
+              <div class="info-item">
+                <span class="info-label">Status</span>
+                <span id="modal-status" class="info-value"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Sprache</span>
+                <span id="modal-language" class="info-value"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Budget</span>
+                <span id="modal-budget" class="info-value"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Einnahmen</span>
+                <span id="modal-revenue" class="info-value"></span>
+              </div>
+            </div>
+
+            <div class="trailer-section">
+              <h3>Trailer</h3>
+              <div id="trailer-container" class="trailer-container">
+                <div class="no-trailer" id="no-trailer">
+                  <i
+                    class="fas fa-film"
+                    style="font-size: 3rem; margin-bottom: 15px"
+                  ></i>
+                  <p>Kein Trailer verfügbar</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Particles Background -->
     <div class="particles" id="particles"></div>
 
@@ -654,6 +938,8 @@
       const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
       const DEFAULT_POSTER =
         "https://images.unsplash.com/photo-1542204165-65bf26472b9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
+      const DEFAULT_BACKDROP =
+        "https://images.unsplash.com/photo-1489599809518-364b1506d3db?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80";
 
       // DOM elements
       const filmsContainer = document.getElementById("films-container");
@@ -661,33 +947,52 @@
       const searchInput = document.getElementById("search-input");
       const searchBtn = document.getElementById("search-btn");
       const particlesContainer = document.getElementById("particles");
+      const filmModal = document.getElementById("film-modal");
+      const closeModal = document.getElementById("close-modal");
+
+      // Modal elements
+      const modalTitle = document.getElementById("modal-title");
+      const modalYear = document.getElementById("modal-year");
+      const modalRuntime = document.getElementById("modal-runtime");
+      const modalRating = document.getElementById("modal-rating");
+      const modalPoster = document.getElementById("modal-poster");
+      const modalBackdrop = document.getElementById("modal-backdrop");
+      const modalOverview = document.getElementById("modal-overview");
+      const modalGenres = document.getElementById("modal-genres");
+      const modalStatus = document.getElementById("modal-status");
+      const modalLanguage = document.getElementById("modal-language");
+      const modalBudget = document.getElementById("modal-budget");
+      const modalRevenue = document.getElementById("modal-revenue");
+      const trailerContainer = document.getElementById("trailer-container");
+      const noTrailer = document.getElementById("no-trailer");
 
       // Current filter state
       let currentMood = "all";
       let currentSearch = "";
       let currentPage = 1;
       let isLoading = false;
+      let currentFilms = [];
 
       // Genre ID to name mapping
       const genreMap = {
         28: "Action",
-        12: "Adventure",
+        12: "Abenteuer",
         16: "Animation",
-        35: "Comedy",
-        80: "Crime",
-        99: "Documentary",
+        35: "Komödie",
+        80: "Krimi",
+        99: "Dokumentarfilm",
         18: "Drama",
-        10751: "Family",
+        10751: "Familie",
         14: "Fantasy",
-        36: "History",
+        36: "Historie",
         27: "Horror",
-        10402: "Music",
+        10402: "Musik",
         9648: "Mystery",
-        10749: "Romance",
-        878: "Sci-Fi",
-        10770: "TV Movie",
+        10749: "Romantik",
+        878: "Science-Fiction",
+        10770: "TV-Film",
         53: "Thriller",
-        10752: "War",
+        10752: "Kriegsfilm",
         37: "Western",
       };
 
@@ -713,7 +1018,7 @@
         // Simulate loading completion
         setTimeout(() => {
           filmsContainer.innerHTML = "";
-          displayFilms(films);
+          displayFilms(currentFilms);
         }, 2000);
       }
 
@@ -743,6 +1048,28 @@
 
         // Infinite scroll
         window.addEventListener("scroll", handleScroll);
+
+        // Modal functionality
+        closeModal.addEventListener("click", () => {
+          filmModal.style.display = "none";
+          // Stop trailer video when closing modal
+          const iframe = trailerContainer.querySelector("iframe");
+          if (iframe) {
+            iframe.src = iframe.src; // This stops the video
+          }
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener("click", (e) => {
+          if (e.target === filmModal) {
+            filmModal.style.display = "none";
+            // Stop trailer video when closing modal
+            const iframe = trailerContainer.querySelector("iframe");
+            if (iframe) {
+              iframe.src = iframe.src; // This stops the video
+            }
+          }
+        });
       }
 
       // Handle infinite scroll
@@ -787,7 +1114,8 @@
             `${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${currentPage}&language=de`
           );
           const data = await response.json();
-          displayFilms(data.results);
+          currentFilms = data.results;
+          displayFilms(currentFilms);
         } catch (error) {
           console.error("Error fetching popular movies:", error);
           showError(
@@ -804,7 +1132,8 @@
             `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&page=${currentPage}&language=de`
           );
           const data = await response.json();
-          displayFilms(data.results);
+          currentFilms = data.results;
+          displayFilms(currentFilms);
         } catch (error) {
           console.error("Error fetching movies by genre:", error);
           showError(
@@ -823,7 +1152,8 @@
             )}&page=${currentPage}&language=de`
           );
           const data = await response.json();
-          displayFilms(data.results);
+          currentFilms = data.results;
+          displayFilms(currentFilms);
         } catch (error) {
           console.error("Error searching movies:", error);
           showError("Fehler bei der Suche. Bitte versuche es später erneut.");
@@ -854,128 +1184,146 @@
           }
 
           const data = await response.json();
-          appendFilms(data.results);
+          currentFilms = [...currentFilms, ...data.results];
+          displayFilms(currentFilms);
         } catch (error) {
           console.error("Error loading more movies:", error);
+          showError("Fehler beim Nachladen von Filmen.");
         } finally {
           isLoading = false;
         }
       }
 
-      // Display films in the grid
+      // Show loading spinner
+      function showLoading() {
+        filmsContainer.innerHTML = `
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Lade die krassesten Filme...</p>
+          </div>`;
+      }
+
+      // Show error message
+      function showError(message) {
+        filmsContainer.innerHTML = `
+          <div class="loading">
+            <p style="color: var(--accent);">${message}</p>
+          </div>`;
+      }
+
+      // Display films in grid
       function displayFilms(films) {
-        if (films.length === 0) {
-          filmsContainer.innerHTML =
-            '<div class="no-results">Keine Filme gefunden, die deinen Kriterien entsprechen.</div>';
+        if (!films || films.length === 0) {
+          filmsContainer.innerHTML = `
+            <div class="loading">
+              <p style="color: var(--accent);">Keine Filme gefunden.</p>
+            </div>`;
           return;
         }
 
         filmsContainer.innerHTML = "";
         films.forEach((film) => {
-          filmsContainer.appendChild(createFilmCard(film));
+          const poster = film.poster_path
+            ? `${IMAGE_BASE_URL}${film.poster_path}`
+            : DEFAULT_POSTER;
+
+          const filmCard = document.createElement("div");
+          filmCard.classList.add("film-card");
+          filmCard.innerHTML = `
+            <img src="${poster}" alt="${film.title}" class="film-poster" />
+            <div class="film-info">
+              <h3 class="film-title">${film.title}</h3>
+              <p class="film-year">${
+                film.release_date ? film.release_date.split("-")[0] : "N/A"
+              }</p>
+              <div class="film-moods">
+                ${film.genre_ids
+                  .map((id) =>
+                    genreMap[id]
+                      ? `<span class="mood-tag">${genreMap[id]}</span>`
+                      : ""
+                  )
+                  .join("")}
+              </div>
+            </div>
+          `;
+          filmCard.addEventListener("click", () => openModal(film.id));
+          filmsContainer.appendChild(filmCard);
         });
       }
 
-      // Append films to the grid (for infinite scroll)
-      function appendFilms(films) {
-        films.forEach((film) => {
-          filmsContainer.appendChild(createFilmCard(film));
-        });
+      // Open modal with film details
+      async function openModal(movieId) {
+        try {
+          const response = await fetch(
+            `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&append_to_response=videos&language=de`
+          );
+          const data = await response.json();
+
+          // Fill modal
+          modalTitle.textContent = data.title;
+          modalYear.textContent = data.release_date
+            ? data.release_date.split("-")[0]
+            : "";
+          modalRuntime.textContent = data.runtime ? `${data.runtime} Min` : "";
+          modalRating.textContent = data.vote_average
+            ? data.vote_average.toFixed(1)
+            : "N/A";
+          modalPoster.src = data.poster_path
+            ? `${IMAGE_BASE_URL}${data.poster_path}`
+            : DEFAULT_POSTER;
+          modalBackdrop.src = data.backdrop_path
+            ? `${IMAGE_BASE_URL}${data.backdrop_path}`
+            : DEFAULT_BACKDROP;
+          modalOverview.textContent =
+            data.overview || "Keine Übersicht verfügbar";
+
+          // Genres
+          modalGenres.innerHTML = "";
+          data.genres.forEach((g) => {
+            const span = document.createElement("span");
+            span.classList.add("modal-genre");
+            span.textContent = g.name;
+            modalGenres.appendChild(span);
+          });
+
+          // Infos
+          modalStatus.textContent = data.status || "N/A";
+          modalLanguage.textContent = data.original_language.toUpperCase();
+          modalBudget.textContent = data.budget
+            ? `$${data.budget.toLocaleString()}`
+            : "N/A";
+          modalRevenue.textContent = data.revenue
+            ? `$${data.revenue.toLocaleString()}`
+            : "N/A";
+
+          // Trailer
+          trailerContainer.innerHTML = "";
+          const trailer = data.videos.results.find(
+            (v) => v.type === "Trailer" && v.site === "YouTube"
+          );
+          if (trailer) {
+            trailerContainer.innerHTML = `
+              <iframe 
+                src="https://www.youtube.com/embed/${trailer.key}" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>`;
+          } else {
+            trailerContainer.appendChild(noTrailer);
+          }
+
+          // Show modal
+          filmModal.style.display = "block";
+        } catch (error) {
+          console.error("Error loading film details:", error);
+          alert("Fehler beim Laden der Filmdetails.");
+        }
       }
 
-      // Create a film card element
-      function createFilmCard(film) {
-        const filmCard = document.createElement("div");
-        filmCard.className = "film-card";
-
-        // Get year from release date
-        const year = film.release_date
-          ? new Date(film.release_date).getFullYear()
-          : "Unbekannt";
-
-        // Get genre names
-        const genres = film.genre_ids
-          ? film.genre_ids.map((id) => genreMap[id] || "Unbekannt").slice(0, 3)
-          : [];
-
-        // Use poster path if available, otherwise use default
-        const posterUrl = film.poster_path
-          ? `${IMAGE_BASE_URL}${film.poster_path}`
-          : DEFAULT_POSTER;
-
-        filmCard.innerHTML = `
-                <img src="${posterUrl}" alt="${
-          film.title
-        }" class="film-poster" onerror="this.src='${DEFAULT_POSTER}'">
-                <div class="film-info">
-                    <h3 class="film-title">${film.title}</h3>
-                    <div class="film-year">${year}</div>
-                    <div class="film-moods">
-                        ${genres
-                          .map(
-                            (genre) => `<span class="mood-tag">${genre}</span>`
-                          )
-                          .join("")}
-                    </div>
-                </div>
-            `;
-
-        return filmCard;
-      }
-
-      // Show loading state
-      function showLoading() {
-        filmsContainer.innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Lade die krassesten Filme...</p>
-                </div>
-            `;
-      }
-
-      // Show error message
-      function showError(message) {
-        filmsContainer.innerHTML = `<div class="no-results">${message}</div>`;
-      }
-
-      // Sample data for initial display (if API fails)
-      const films = [
-        {
-          id: 1,
-          title: "The Dark Knight",
-          year: 2008,
-          poster:
-            "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
-          genre_ids: [28, 80, 18],
-        },
-        {
-          id: 2,
-          title: "Inception",
-          year: 2010,
-          poster:
-            "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
-          genre_ids: [28, 878, 53],
-        },
-        {
-          id: 3,
-          title: "Pulp Fiction",
-          year: 1994,
-          poster:
-            "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
-          genre_ids: [80, 53],
-        },
-        {
-          id: 4,
-          title: "Fight Club",
-          year: 1999,
-          poster:
-            "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
-          genre_ids: [18],
-        },
-      ];
-
-      // Initialize the app when the DOM is loaded
-      document.addEventListener("DOMContentLoaded", init);
+      // Start App
+      init();
     </script>
   </body>
 </html>
