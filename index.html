@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MoodFilm - Discover Movies by Mood</title>
+    <style>
+      :root {
+        --primary: #4361ee;
+        --secondary: #3a0ca3;
+        --accent: #f72585;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray: #6c757d;
+        --success: #4cc9f0;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        color: var(--dark);
+        line-height: 1.6;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 2rem 0;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .search-container {
+        display: flex;
+        margin: 1.5rem 0;
+      }
+
+      #search-input {
+        flex: 1;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 4px 0 0 4px;
+        font-size: 1rem;
+      }
+
+      #search-btn {
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        padding: 0 20px;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      #search-btn:hover {
+        background-color: #d81159;
+      }
+
+      .mood-categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 2rem;
+        justify-content: center;
+      }
+
+      .mood-btn {
+        background-color: white;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        padding: 10px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 600;
+      }
+
+      .mood-btn:hover,
+      .mood-btn.active {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .films-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 2rem;
+      }
+
+      .film-card {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .film-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .film-poster {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+      }
+
+      .film-info {
+        padding: 15px;
+      }
+
+      .film-title {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+
+      .film-year {
+        color: var(--gray);
+        margin-bottom: 10px;
+      }
+
+      .film-moods {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+      }
+
+      .mood-tag {
+        background-color: var(--success);
+        color: white;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray);
+        grid-column: 1 / -1;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray);
+        grid-column: 1 / -1;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding: 1rem;
+        color: var(--gray);
+        border-top: 1px solid #ddd;
+      }
+
+      @media (max-width: 768px) {
+        .films-grid {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .films-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .mood-categories {
+          justify-content: flex-start;
+          overflow-x: auto;
+          padding-bottom: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>MoodFilm</h1>
+        <p class="tagline">Discover films that match your mood</p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="search-container">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search for a film..."
+        />
+        <button id="search-btn">Search</button>
+      </div>
+
+      <div class="mood-categories">
+        <button class="mood-btn active" data-mood="all">All Films</button>
+        <button class="mood-btn" data-mood="28">Action</button>
+        <button class="mood-btn" data-mood="35">Comedy</button>
+        <button class="mood-btn" data-mood="18">Drama</button>
+        <button class="mood-btn" data-mood="10749">Romance</button>
+        <button class="mood-btn" data-mood="53">Thriller</button>
+        <button class="mood-btn" data-mood="27">Horror</button>
+        <button class="mood-btn" data-mood="878">Sci-Fi</button>
+      </div>
+
+      <div class="films-grid" id="films-container">
+        <div class="loading">Loading films...</div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>MoodFilm &copy; 2023 - Powered by TMDb</p>
+      </div>
+    </footer>
+
+    <script>
+      // TMDb API Configuration
+      const API_KEY = "530bb814a04b601ef2cc5544d753bd67"; // Replace with your actual API key
+      const BASE_URL = "https://api.themoviedb.org/3";
+      const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+      const DEFAULT_POSTER =
+        "https://via.placeholder.com/300x450/6c757d/ffffff?text=No+Poster";
+
+      // DOM elements
+      const filmsContainer = document.getElementById("films-container");
+      const moodButtons = document.querySelectorAll(".mood-btn");
+      const searchInput = document.getElementById("search-input");
+      const searchBtn = document.getElementById("search-btn");
+
+      // Current filter state
+      let currentMood = "all";
+      let currentSearch = "";
+      let currentPage = 1;
+      let isLoading = false;
+
+      // Genre ID to name mapping
+      const genreMap = {
+        28: "Action",
+        12: "Adventure",
+        16: "Animation",
+        35: "Comedy",
+        80: "Crime",
+        99: "Documentary",
+        18: "Drama",
+        10751: "Family",
+        14: "Fantasy",
+        36: "History",
+        27: "Horror",
+        10402: "Music",
+        9648: "Mystery",
+        10749: "Romance",
+        878: "Sci-Fi",
+        10770: "TV Movie",
+        53: "Thriller",
+        10752: "War",
+        37: "Western",
+      };
+
+      // Initialize the app
+      async function init() {
+        // Load popular movies initially
+        await loadPopularMovies();
+        setupEventListeners();
+      }
+
+      // Set up event listeners
+      function setupEventListeners() {
+        // Mood filter buttons
+        moodButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            // Update active button
+            moodButtons.forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            // Update current mood and filter films
+            currentMood = button.dataset.mood;
+            currentPage = 1; // Reset to first page
+            filterFilms();
+          });
+        });
+
+        // Search functionality
+        searchBtn.addEventListener("click", performSearch);
+        searchInput.addEventListener("keyup", (e) => {
+          if (e.key === "Enter") {
+            performSearch();
+          }
+        });
+
+        // Infinite scroll
+        window.addEventListener("scroll", handleScroll);
+      }
+
+      // Handle infinite scroll
+      function handleScroll() {
+        if (isLoading) return;
+
+        const { scrollTop, scrollHeight, clientHeight } =
+          document.documentElement;
+
+        if (scrollTop + clientHeight >= scrollHeight - 5) {
+          currentPage++;
+          loadMoreMovies();
+        }
+      }
+
+      // Perform search
+      function performSearch() {
+        currentSearch = searchInput.value.trim();
+        currentPage = 1; // Reset to first page when searching
+
+        if (currentSearch) {
+          searchMovies(currentSearch);
+        } else {
+          // If search is empty, load popular movies
+          loadPopularMovies();
+        }
+      }
+
+      // Filter films based on current mood
+      async function filterFilms() {
+        if (currentMood === "all") {
+          await loadPopularMovies();
+        } else {
+          await loadMoviesByGenre(currentMood);
+        }
+      }
+
+      // Load popular movies from TMDb
+      async function loadPopularMovies() {
+        try {
+          showLoading();
+          const response = await fetch(
+            `${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${currentPage}`
+          );
+          const data = await response.json();
+          displayFilms(data.results);
+        } catch (error) {
+          console.error("Error fetching popular movies:", error);
+          showError("Failed to load movies. Please try again later.");
+        }
+      }
+
+      // Load movies by genre from TMDb
+      async function loadMoviesByGenre(genreId) {
+        try {
+          showLoading();
+          const response = await fetch(
+            `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&page=${currentPage}`
+          );
+          const data = await response.json();
+          displayFilms(data.results);
+        } catch (error) {
+          console.error("Error fetching movies by genre:", error);
+          showError("Failed to load movies. Please try again later.");
+        }
+      }
+
+      // Search movies from TMDb
+      async function searchMovies(query) {
+        try {
+          showLoading();
+          const response = await fetch(
+            `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(
+              query
+            )}&page=${currentPage}`
+          );
+          const data = await response.json();
+          displayFilms(data.results);
+        } catch (error) {
+          console.error("Error searching movies:", error);
+          showError("Failed to search movies. Please try again later.");
+        }
+      }
+
+      // Load more movies for infinite scroll
+      async function loadMoreMovies() {
+        if (isLoading) return;
+
+        isLoading = true;
+        try {
+          let response;
+          if (currentSearch) {
+            response = await fetch(
+              `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(
+                currentSearch
+              )}&page=${currentPage}`
+            );
+          } else if (currentMood === "all") {
+            response = await fetch(
+              `${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${currentPage}`
+            );
+          } else {
+            response = await fetch(
+              `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=${currentMood}&page=${currentPage}`
+            );
+          }
+
+          const data = await response.json();
+          appendFilms(data.results);
+        } catch (error) {
+          console.error("Error loading more movies:", error);
+        } finally {
+          isLoading = false;
+        }
+      }
+
+      // Display films in the grid
+      function displayFilms(films) {
+        if (films.length === 0) {
+          filmsContainer.innerHTML =
+            '<div class="no-results">No films found matching your criteria.</div>';
+          return;
+        }
+
+        filmsContainer.innerHTML = "";
+        films.forEach((film) => {
+          filmsContainer.appendChild(createFilmCard(film));
+        });
+      }
+
+      // Append films to the grid (for infinite scroll)
+      function appendFilms(films) {
+        films.forEach((film) => {
+          filmsContainer.appendChild(createFilmCard(film));
+        });
+      }
+
+      // Create a film card element
+      function createFilmCard(film) {
+        const filmCard = document.createElement("div");
+        filmCard.className = "film-card";
+
+        // Get year from release date
+        const year = film.release_date
+          ? new Date(film.release_date).getFullYear()
+          : "Unknown";
+
+        // Get genre names
+        const genres = film.genre_ids
+          ? film.genre_ids.map((id) => genreMap[id] || "Unknown").slice(0, 3)
+          : [];
+
+        // Use poster path if available, otherwise use default
+        const posterUrl = film.poster_path
+          ? `${IMAGE_BASE_URL}${film.poster_path}`
+          : DEFAULT_POSTER;
+
+        filmCard.innerHTML = `
+                <img src="${posterUrl}" alt="${
+          film.title
+        }" class="film-poster" onerror="this.src='${DEFAULT_POSTER}'">
+                <div class="film-info">
+                    <h3 class="film-title">${film.title}</h3>
+                    <div class="film-year">${year}</div>
+                    <div class="film-moods">
+                        ${genres
+                          .map(
+                            (genre) => `<span class="mood-tag">${genre}</span>`
+                          )
+                          .join("")}
+                    </div>
+                </div>
+            `;
+
+        return filmCard;
+      }
+
+      // Show loading state
+      function showLoading() {
+        filmsContainer.innerHTML =
+          '<div class="loading">Loading films...</div>';
+      }
+
+      // Show error message
+      function showError(message) {
+        filmsContainer.innerHTML = `<div class="no-results">${message}</div>`;
+      }
+
+      // Initialize the app when the DOM is loaded
+      document.addEventListener("DOMContentLoaded", init);
+    </script>
+  </body>
+</html>
